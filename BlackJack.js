@@ -30,6 +30,7 @@ newGame.addEventListener('click', function(){
     playerWon = false;
 
     deck = createDeck();
+    shuffleDeck(deck);
     dealerCards = [NextCard(), NextCard()];
     playerCards = [NextCard(), NextCard()];
     
@@ -53,8 +54,21 @@ function createDeck(){
     return deck;
 }
 
+function shuffleDeck(deck){
+    for (let i = 0; i < deck.length; i++){
+        let swapIdx = Math.trunc(Math.random() * deck.length);
+        let tmp = deck[swapIdx];
+        deck[swapIdx] = deck[i];
+        deck[i] = tmp;
+    }
+}
+
 function CardString(card){
     return card.value + ' of ' + card.color;
+}
+
+function NextCard(){
+    return deck.shift();
 }
 
 function showStatus(){
@@ -62,10 +76,10 @@ function showStatus(){
         textArea.innerText = 'Hello and Welcome to Simple Black Jack game.';
         return;
     }
-}
 
-function NextCard(){
-    return deck.shift();
+    for (var i = 0; i < deck.length; i++){
+        textArea.innerText += '\n' + CardString(deck[i]);
+    }
 }
 
 let deck = createDeck();
