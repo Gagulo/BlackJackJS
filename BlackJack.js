@@ -3,12 +3,10 @@ let value = ['Ace', 'King', 'Queenie', 'Jack',
             'Ten', 'Nine', 'Eight', 'Seven', 
             'Six', 'Five', 'Four', 'Three', 'Two'];
 
-//Buttons that ve to be provided with an id's but u can use classes as well.
 let newGameBtn = document.getElementById('Start-Button');
 let hitBtn = document.getElementById('Hit-Button');
 let stayBtn = document.getElementById('Stay-Button');
 
-//Text Area
 let textArea = document.getElementById('Text-Area');
 
 let gameStart = false,
@@ -39,6 +37,18 @@ newGame.addEventListener('click', function(){
     stayBtn.style.display = 'inline';
     showStatus();
 });
+
+hitBtn.addEventListener('click', function(){
+    playerCards.push(NextCard());
+    checkForEndOfTheGame();
+    showStatus();
+});
+
+stayBtn.addEventListener('click', function(){
+    gameOver = true;
+    checkForEndOfTheGame();
+    showStatus();
+})
 
 function createDeck(){
     let deck = [];
@@ -71,6 +81,31 @@ function NextCard(){
     return deck.shift();
 }
 
+function getCardNumericValue(card){
+    switch (card.value){
+        case 'Ace':
+        return 1;
+        case 'Two':
+        return 2;
+        case 'Three':
+        return 3;
+        case 'Four':
+        return 4;
+        case 'Five':
+        return 5;
+        case 'Six':
+        return 6;
+        case 'Seven':
+        return 7;
+        case 'Eight':
+        return 8;
+        case 'Nine':
+        return 9;
+        default:
+        return 10;
+    }
+}
+
 function getScore(cardArray){
     let score = 0;
     let hasAce = false;
@@ -90,6 +125,40 @@ function getScore(cardArray){
 function updateScores(){
     dealerScore = getScore(dealerCards);
     playerScore = getScore(playerCards);
+}
+
+function checkForEndOfTheGame(){
+    updateScores();
+
+    if (gameOver){
+        while (dealerScore < playerScore
+        && playerScore <= 21
+        && dealerScore <= 21){
+            dealerCards.push(NextCard());
+            updateScores();
+        }
+    }
+
+    if (playerScore > 21){
+        playerWon = false;
+        gameOver = true;
+    }
+    else if ( dealerScore > 21){
+        playerWon = true;
+        gameOver = true;
+    }
+    else if ( playerScore = 21){
+        playerWon = true;
+        gameOver = true;
+    }
+    else if (gameOver){
+        if (playerScore > dealerScore){
+            playerWon = true;
+        }
+        else {
+            playerWon = false;
+        }
+    }
 }
 
 function showStatus(){
