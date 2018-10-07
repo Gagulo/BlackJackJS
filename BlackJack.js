@@ -71,14 +71,64 @@ function NextCard(){
     return deck.shift();
 }
 
+function getScore(cardArray){
+    let score = 0;
+    let hasAce = false;
+    for (let i = 0; i < cardArray.length; i++){
+        let card = cardArray[i];
+        score += getCardNumericValue(card);
+        if (card.value === 'Ace'){
+            hasAce = true;
+        }
+    }
+    if (hasAce && score + 10 <= 21){
+        return score + 10;
+    }
+    return score;
+}
+
+function updateScores(){
+    dealerScore = getScore(dealerCards);
+    playerScore = getScore(playerCards);
+}
+
 function showStatus(){
     if(!gameStart){
         textArea.innerText = 'Hello and Welcome to Simple Black Jack game.';
         return;
     }
 
-    for (var i = 0; i < deck.length; i++){
-        textArea.innerText += '\n' + CardString(deck[i]);
+    let dealerCardString = '';
+    for (let i = 0; i < dealerCards.length; i++){
+        dealerCardString += CardString(dealerCards[i]) + '\n';
+    }
+
+    let playerCardString = '';
+    for (let i = 0; i < playerCards.length; i++){
+        playerCardString += CardString(playerCards[i]) + '\n';
+    }
+
+    updateScores();
+
+    textArea.innerText = 
+    'Dealer has:\n' + 
+    dealerCardString + 
+    '(score: ' + dealerScore + '\n\n' + 
+
+    'Player has:\n' + 
+    playerCardString + 
+    '(score: ' + playerScore + '\n\n';
+
+    if (gameOver){
+        if (playerWon){
+            textArea.innerText += "You Won!";
+        }
+        else {
+            textArea.innerText += "Dealer Won";
+        }
+        newGameBtn.style.display = 'inline';
+        hitBtn.style.display = 'none';
+        stayBtn.style.display = 'none';
     }
 }
 
